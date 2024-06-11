@@ -12,7 +12,8 @@ api_key = os.getenv('API_KEY')
 if not api_key:
     st.error("No se pudo obtener la clave API. Por favor, verifique la configuración de los secretos de GitHub.")
 else:
-    st.write(f"API_KEY: {api_key[:4]}****")  # Mostrar parcialmente la clave API para depuración
+    # Mostrar parcialmente la clave API para depuración
+    st.write(f"API_KEY: {api_key[:4]}****")
 
     # Función para obtener datos climáticos desde OpenWeather
     def obtener_datos_horarios(lat, lon, api_key):
@@ -120,7 +121,4 @@ else:
             'Precipitación (mm/3h)': 'Precipitación (mm/3h)'
         }, inplace=True)
         st.table(clima_df_horario)
-# Trigger GitHub Actions
-# Trigger GitHub Actions
-# Trigger GitHub Actions
 # Trigger GitHub Actions
