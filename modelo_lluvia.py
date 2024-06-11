@@ -7,13 +7,13 @@ from datetime import datetime, timedelta
 st.set_page_config(page_title='Predicciones Rio Grande do Sul', page_icon=':cloud:', layout='centered')
 
 # Obtener la clave API desde las variables de entorno
-api_key = os.getenv('API_KEY')
+api_key = os.getenv('clima')
 
 if not api_key:
     st.error("No se pudo obtener la clave API. Por favor, verifique la configuración de los secretos de GitHub.")
 else:
     # Mostrar parcialmente la clave API para depuración
-    st.write(f"API_KEY: {api_key[:4]}****")
+    st.write(f"clima: {api_key[:4]}****")
 
     # Función para obtener datos climáticos desde OpenWeather
     def obtener_datos_horarios(lat, lon, api_key):
