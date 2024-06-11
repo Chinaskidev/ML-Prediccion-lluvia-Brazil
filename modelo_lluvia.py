@@ -2,14 +2,14 @@ import pandas as pd
 import streamlit as st
 import os
 import requests
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
 
 st.set_page_config(page_title='Predicciones Rio Grande do Sul', page_icon = ':cloud :', layout = 'centered')
 
 # aca se carga la API
-load_dotenv()
+#load_dotenv()
 api_key = os.getenv('API_KEY')
 
 # Función para obtener datos climáticos desde OpenWeather
