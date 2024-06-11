@@ -120,3 +120,4 @@ else:
             'Precipitación (mm/3h)': 'Precipitación (mm/3h)'
         }, inplace=True)
         st.table(clima_df_horario)
+# Trigger GitHub Actions
