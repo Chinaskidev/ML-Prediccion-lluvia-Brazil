@@ -6,14 +6,14 @@ from datetime import datetime, timedelta
 
 st.set_page_config(page_title='Predicciones Rio Grande do Sul', page_icon=':cloud:', layout='centered')
 
-# Obtener la clave API desde las variables de entorno
+# esto es para obtener la api desde la variable de entorno
 api_key = os.getenv('clima')
 
 if not api_key:
     st.error("No se pudo obtener la clave API. Por favor, verifique la configuración de los secretos de GitHub.")
 else:
     # Mostrar parcialmente la clave API para depuración
-    st.write(f"clima: {api_key[:4]}****")
+    #st.write(f"clima: {api_key[:4]}****")
 
     # Función para obtener datos climáticos desde OpenWeather
     def obtener_datos_horarios(lat, lon, api_key):
@@ -38,7 +38,7 @@ else:
             st.error(f"No se pudo obtener datos del clima. Código de estado: {response.status_code}, Mensaje: {response.text}")
             return None
 
-    # Convertir la dirección del viento de grados a cardinales
+    # Convertir la dirección del viento de grados a cardinales lo copie de chat gpt
     def convertir_direccion_viento(deg):
         if deg >= 337.5 or deg < 22.5:
             return 'N'
@@ -57,7 +57,7 @@ else:
         elif deg >= 292.5 and deg < 337.5:
             return 'NW'
 
-    # Obtener la imagen adecuada para el clima y el texto descriptivo
+    # aca pongo las images y sus textos
     def obtener_imagen_clima(condiciones):
         condiciones = condiciones.lower()
         if 'rain' in condiciones:
@@ -79,10 +79,10 @@ else:
     lat = -29.75
     lon = -53.15
 
-    # Título centrado
+    # Título centrado usando html
     st.markdown("<h1 style='text-align: center; color: #b6bbb5'>Predicción de Clima en Río Grande del Sur</h1>", unsafe_allow_html=True)
 
-    # Selector de fecha en la barra lateral
+    # Selector de fecha en la barra lateral(esto me gusto)
     st.sidebar.header("Selecciona la fecha para la predicción")
     fecha = st.sidebar.date_input("Fecha", datetime.now() + timedelta(days=1))
 
