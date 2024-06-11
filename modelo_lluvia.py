@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 st.set_page_config(page_title='Predicciones Rio Grande do Sul', page_icon=':cloud:', layout='centered')
 
 # Obtener la clave API desde las variables de entorno
-api_key = os.getenv('api_key')
+api_key = os.getenv('API_KEY')
 
 if not api_key:
     st.error("No se pudo obtener la clave API. Por favor, verifique la configuración de los secretos de GitHub.")
