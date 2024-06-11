@@ -10,7 +10,7 @@ st.set_page_config(page_title='Predicciones Rio Grande do Sul', page_icon = ':cl
 
 # aca se carga la API
 load_dotenv()
-api_key = os.getenv('clima')
+api_key = os.getenv('API_KEY')
 
 # Función para obtener datos climáticos desde OpenWeather
 def obtener_datos_horarios(lat, lon, api_key):
