@@ -3,17 +3,17 @@ import streamlit as st
 import os
 import requests
 from datetime import datetime, timedelta
+from PIL import Image
 
 st.set_page_config(page_title='Predicciones Rio Grande do Sul', page_icon=':cloud:', layout='centered')
 
-# esto es para obtener la api desde la variable de entorno
-api_key = os.getenv('clima')
+# Obtener la clave API desde las variables de entorno
+api_key = os.getenv('api_key')
 
 if not api_key:
     st.error("No se pudo obtener la clave API. Por favor, verifique la configuración de los secretos de GitHub.")
 else:
-    # Mostrar parcialmente la clave API para depuración
-    #st.write(f"clima: {api_key[:4]}****")
+    st.write(f"API_KEY: {api_key[:4]}****")
 
     # Función para obtener datos climáticos desde OpenWeather
     def obtener_datos_horarios(lat, lon, api_key):
@@ -38,7 +38,7 @@ else:
             st.error(f"No se pudo obtener datos del clima. Código de estado: {response.status_code}, Mensaje: {response.text}")
             return None
 
-    # Convertir la dirección del viento de grados a cardinales lo copie de chat gpt
+    # Convertir la dirección del viento de grados a cardinales
     def convertir_direccion_viento(deg):
         if deg >= 337.5 or deg < 22.5:
             return 'N'
@@ -57,32 +57,44 @@ else:
         elif deg >= 292.5 and deg < 337.5:
             return 'NW'
 
-    # aca pongo las images y sus textos
-    def obtener_imagen_clima(condiciones):
+    # Obtener la imagen adecuada para el clima y el texto descriptivo, y ajustar el tamaño de la imagen
+    def obtener_imagen_clima(condiciones, nuevo_ancho=200, nuevo_alto=200):
         condiciones = condiciones.lower()
         if 'rain' in condiciones:
-            return './img/lluvia.png', 'Va a llover, protégete y lleva paraguas'
+            ruta_imagen = './img/lluvia.png'
+            texto_clima = 'Va a llover, protégete y lleva paraguas'
         elif 'few clouds' in condiciones:
-            return './img/soleado.png', 'Hará sol, ponte bloqueador y bebe mucha agua'
+            ruta_imagen = './img/soleado.png'
+            texto_clima = 'Hará sol, ponte bloqueador y bebe mucha agua'
         elif 'scattered clouds' in condiciones:
-            return './img/nubes_dispersas.png', 'Estará nublado, ponte un abrigo si sales'
+            ruta_imagen = './img/nubes_dispersas.png'
+            texto_clima = 'Estará nublado, ponte un abrigo si sales'
         elif 'moderate rain' in condiciones:
-            return './img/lluvia_moderada.png', 'Va a haber algo de lluvia, lleva paraguas'
+            ruta_imagen = './img/lluvia_moderada.png'
+            texto_clima = 'Va a haber algo de lluvia, lleva paraguas'
         elif 'heavy intensity rain' in condiciones:
-            return './img/tormenta.png', 'Habrá tormenta, toma precauciones'
+            ruta_imagen = './img/tormenta.png'
+            texto_clima = 'Habrá tormenta, toma precauciones'
         elif 'overcast clouds' in condiciones:
-            return './img/nublado.png', 'Estará completamente nublado'
+            ruta_imagen = './img/nublado.png'
+            texto_clima = 'Estará completamente nublado'
         else:
-            return './img/soleado.png', 'Soleado, Relájate'
+            ruta_imagen = './img/soleado.png'
+            texto_clima = 'Soleado, Relájate'
+
+        # Ajustar el tamaño de la imagen
+        imagen = Image.open(ruta_imagen)
+        imagen = imagen.resize((nuevo_ancho, nuevo_alto), Image.ANTIALIAS)
+        return imagen, texto_clima
 
     # Coordenadas del centro del estado de Río Grande del Sur
     lat = -29.75
     lon = -53.15
 
-    # Título centrado usando html
+    # Título centrado
     st.markdown("<h1 style='text-align: center; color: #b6bbb5'>Predicción de Clima en Río Grande del Sur</h1>", unsafe_allow_html=True)
 
-    # Selector de fecha en la barra lateral(esto me gusto)
+    # Selector de fecha en la barra lateral
     st.sidebar.header("Selecciona la fecha para la predicción")
     fecha = st.sidebar.date_input("Fecha", datetime.now() + timedelta(days=1))
 
@@ -121,5 +133,3 @@ else:
             'Precipitación (mm/3h)': 'Precipitación (mm/3h)'
         }, inplace=True)
         st.table(clima_df_horario)
-# Trigger GitHub Actions
-# Trigger GitHub Actions
