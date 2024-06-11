@@ -12,3 +12,4 @@ seaborn==0.13.2
 streamlit==1.35.0
 streamlit_folium==0.20.0
 tensorflow==2.16.1
+pillow==10.3.0
