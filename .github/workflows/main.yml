@@ -25,6 +25,6 @@ jobs:
 
       - name: Run Streamlit app
         env:
-          clima2: ${{ secrets.CLIMA2 }}  # Proveer la clave API desde los secretos de GitHub
+            api_key: ${{ secrets.clima2 }}  # Proveer la clave API desde los secretos de GitHub
         run: |
           streamlit run modelo_lluvia.py
