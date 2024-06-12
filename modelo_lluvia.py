@@ -127,7 +127,7 @@ else:
         else:
             st.write("No hay datos disponibles para la fecha seleccionada.")
 
-        # Mostrar datos horarios en una tabla
+        # Mostrar datos horarios en una tabla sin el índice
         st.subheader("Datos Horarios")
         clima_df_horario = clima_df[['Hora', 'Temperatura', 'Humedad', 'Velocidad Viento', 'Dirección del viento', 'Precipitación (mm/3h)']]
         clima_df_horario.rename(columns={
@@ -138,4 +138,6 @@ else:
             'Dirección del viento': 'Dirección del Viento',
             'Precipitación (mm/3h)': 'Precipitación (mm/3h)'
         }, inplace=True)
-        st.table(clima_df_horario)
+        
+        # Convertir a HTML sin índice y mostrar en Streamlit
+        st.markdown(clima_df_horario.to_html(index=False), unsafe_allow_html=True)
