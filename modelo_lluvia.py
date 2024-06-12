@@ -3,18 +3,15 @@ import streamlit as st
 import os
 import requests
 from datetime import datetime, timedelta
-from PIL import Image
 
 st.set_page_config(page_title='Predicciones Rio Grande do Sul', page_icon=':cloud:', layout='centered')
 
 # Obtener la clave API desde las variables de entorno
-api_key = os.getenv('api_key')
+api_key = os.getenv('clima')
 
 if not api_key:
     st.error("No se pudo obtener la clave API. Por favor, verifique la configuración de los secretos de GitHub.")
 else:
-    st.write(f"API_KEY: {api_key[:4]}****")
-
     # Función para obtener datos climáticos desde OpenWeather
     def obtener_datos_horarios(lat, lon, api_key):
         url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={api_key}&units=metric"
@@ -57,35 +54,38 @@ else:
         elif deg >= 292.5 and deg < 337.5:
             return 'NW'
 
-    # Obtener la imagen adecuada para el clima y el texto descriptivo, y ajustar el tamaño de la imagen
-    def obtener_imagen_clima(condiciones, nuevo_ancho=200, nuevo_alto=200):
+    # Obtener la imagen adecuada para el clima y el texto descriptivo
+    def obtener_imagen_clima(condiciones):
         condiciones = condiciones.lower()
         if 'rain' in condiciones:
             ruta_imagen = './img/lluvia.png'
             texto_clima = 'Va a llover, protégete y lleva paraguas'
-        elif 'few clouds' in condiciones:
+        elif 'few clouds' in condiciones or 'clear sky' in condiciones:
             ruta_imagen = './img/soleado.png'
             texto_clima = 'Hará sol, ponte bloqueador y bebe mucha agua'
-        elif 'scattered clouds' in condiciones:
+        elif 'scattered clouds' in condiciones or 'broken clouds' in condiciones:
             ruta_imagen = './img/nubes_dispersas.png'
             texto_clima = 'Estará nublado, ponte un abrigo si sales'
-        elif 'moderate rain' in condiciones:
+        elif 'moderate rain' in condiciones or 'shower rain' in condiciones:
             ruta_imagen = './img/lluvia_moderada.png'
             texto_clima = 'Va a haber algo de lluvia, lleva paraguas'
-        elif 'heavy intensity rain' in condiciones:
+        elif 'heavy intensity rain' in condiciones or 'thunderstorm' in condiciones:
             ruta_imagen = './img/tormenta.png'
             texto_clima = 'Habrá tormenta, toma precauciones'
         elif 'overcast clouds' in condiciones:
             ruta_imagen = './img/nublado.png'
             texto_clima = 'Estará completamente nublado'
+        elif 'snow' in condiciones:
+            ruta_imagen = './img/nieve.png'
+            texto_clima = 'Nevará, abrígate bien'
+        elif 'mist' in condiciones:
+            ruta_imagen = './img/niebla.png'
+            texto_clima = 'Habrá niebla, conduce con precaución'
         else:
             ruta_imagen = './img/soleado.png'
             texto_clima = 'Soleado, Relájate'
 
-        # Ajustar el tamaño de la imagen
-        imagen = Image.open(ruta_imagen)
-        imagen = imagen.resize((nuevo_ancho, nuevo_alto), Image.ANTIALIAS)
-        return imagen, texto_clima
+        return ruta_imagen, texto_clima
 
     # Coordenadas del centro del estado de Río Grande del Sur
     lat = -29.75
@@ -113,11 +113,17 @@ else:
         # Mostrar resultados generales
         st.subheader(f"Condiciones Climáticas para {fecha.strftime('%A, %d de %B de %Y')}")
 
-        # Seleccionar una fila para obtener la imagen del clima y el texto descriptivo
+        # Hago esto para que la imagen y el texto queden centrados
         if not clima_df.empty:
             condiciones = clima_df.iloc[0]['Condiciones']
             imagen_clima, texto_clima = obtener_imagen_clima(condiciones)
-            st.image(imagen_clima, caption=texto_clima, use_column_width=True)
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col1:
+                st.write("")
+            with col2:
+                st.image(imagen_clima, caption=texto_clima, use_column_width=True)
+            with col3:
+                st.write("")
         else:
             st.write("No hay datos disponibles para la fecha seleccionada.")
 
